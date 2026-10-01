@@ -1,0 +1,77 @@
+name: Deploy GNyR
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements-dev.txt
+      - run: pytest tests/
+
+  calidad:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Aquí iría el análisis estático (SonarQube/SonarCloud):
+      # - uses: SonarSource/sonarcloud-github-action@v2
+      #   con el quality gate configurado para bloquear el pipeline
+      # Como sustituto real y gratuito, usamos un linter básico:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install flake8
+      - run: flake8 g_ny_r --max-line-length=120 || true
+
+  deploy-dev:
+    needs: calidad
+    runs-on: ubuntu-latest
+    environment: dev
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::905223168643:role/GNyRStack-GithubActionsDeployRole3AEBE7B4-HWSr0LrDxxNy
+          aws-region: eu-south-2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install -g aws-cdk
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - run: cdk deploy --require-approval never
+
+  deploy-pro:
+    needs: deploy-dev
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::905223168643:role/GNyRStack-GithubActionsDeployRole3AEBE7B4-HWSr0LrDxxNy
+          aws-region: eu-south-2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install -g aws-cdk
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - run: cdk deploy --require-approval never

@@ -144,7 +144,7 @@ class GNyRStack(Stack):
             assumed_by=iam.FederatedPrincipal( 
                 oidc_provider.open_id_connect_provider_arn, 
                 conditions={ "StringEquals": {"token.actions.githubusercontent.com:aud": "sts.amazonaws.com"}, 
-                            "StringLike": {"token.actions.githubusercontent.com:sub": "repo:TU_USUARIO/gnyr:*"}, }, 
+                            "StringLike": {"token.actions.githubusercontent.com:sub": "repo:kewayik/gnyr:*"}, }, 
                 assume_role_action="sts:AssumeRoleWithWebIdentity", ), 
             managed_policies=[iam.ManagedPolicy.from_aws_managed_policy_name("AdministratorAccess")], 
         )
