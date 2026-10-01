@@ -43,6 +43,7 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::905223168643:role/GNyRStack-GithubActionsDeployRole3AEBE7B4-HWSr0LrDxxNy
           aws-region: eu-south-2
+          role-skip-session-tagging: true
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -66,6 +67,7 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::905223168643:role/GNyRStack-GithubActionsDeployRole3AEBE7B4-HWSr0LrDxxNy
           aws-region: eu-south-2
+          role-skip-session-tagging: true
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
