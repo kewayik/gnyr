@@ -39,10 +39,6 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
-      - name: Debug OIDC token claims
-        run: |
-          IDTOKEN=$(curl -sLS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com" | jq -r '.value')
-          echo $IDTOKEN | cut -d. -f2 | base64 -d | jq .
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::905223168643:role/GNyRStack-GithubActionsDeployRole3AEBE7B4-HWSr0LrDxxNy
