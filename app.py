@@ -7,7 +7,15 @@ from g_ny_r.g_ny_r_stack import GNyRStack
 
 
 app = cdk.App()
-GNyRStack(app, "GNyRStack",
+GNyRStack(
+    app, 
+    "GNyRStack", 
+    kb_id="9DY2N7GI2H",
+    env=cdk.Environment(
+        account=os.environ.get("CDK_DEFAULT_ACCOUNT", "905223168643"),
+        region=os.environ.get("CDK_DEFAULT_REGION", "eu-south-2"),
+    ),
+
     # If you don't specify 'env', this stack will be environment-agnostic.
     # Account/Region-dependent features and context lookups will not work,
     # but a single synthesized template can be deployed anywhere.
